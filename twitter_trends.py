@@ -1,3 +1,4 @@
+/**hastags trending on twitter prototype*/
 import findspark
 findspark.init() 
 from pyspark.sql import SparkSession
