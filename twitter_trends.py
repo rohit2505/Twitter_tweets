@@ -1,4 +1,4 @@
-/**hastags trending on twitter prototype using pyspark*/
+/**top5 hastags trending on twitter in india from last two minutes current timee prototype  using pyspark*/
 import findspark
 findspark.init() 
 from pyspark.sql import SparkSession
@@ -6,7 +6,17 @@ spark = SparkSession.builder.config('spark.port.maxRetries', 100).getOrCreate()
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
 import itertools
-df_City= spark.createDataFrame(sntwitter.TwitterSearchScraper(' near:"India" since:2022-12-17_23:00:00_IST until:2022-12-17_23:02:00_IST ').get_items())
+from datetime import datetime
+from datetime import timedelta
+ct = datetime.now()
+n=2
+ct_min_curr_min_2=ct - timedelta(minutes=n)
+ct_min_curr =ct
+date_time_str_curr = ct_min_curr.strftime("%Y-%m-%d_%H:%M:%S")+'_IST'
+date_time_str_curr_min_2 = ct_min_curr_min_2.strftime("%Y-%m-%d_%H:%M:%S")+'_IST'
+
+search= ' near:"India" since:'+date_time_str_curr_min_2+' until:'+date_time_str_curr
+df_City= spark.createDataFrame(sntwitter.TwitterSearchScraper(search).get_items())
 hastag=df_City.select(df_City.content)
 import re
 def hashtagextract(x):
